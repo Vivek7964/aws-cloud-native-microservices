@@ -36,36 +36,6 @@ spec:
           env:
             - name: JAVA_OPTS
               value: -XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/urandom
-            - name: SPRING_DATASOURCE_WRITER_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.writer.secret.name }}
-                  key: url
-            - name: SPRING_DATASOURCE_WRITER_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.writer.secret.name }}
-                  key: username
-            - name: SPRING_DATASOURCE_WRITER_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.writer.secret.name }}
-                  key: password
-            - name: SPRING_DATASOURCE_READER_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.reader.secret.name }}
-                  key: url
-            - name: SPRING_DATASOURCE_READER_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.reader.secret.name }}
-                  key: username
-            - name: SPRING_DATASOURCE_READER_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.reader.secret.name }}
-                  key: password
           envFrom:
             - configMapRef:
                 name: {{ include "orders.configMapName" . }}
@@ -77,12 +47,29 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 24
+
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: 8080
-            initialDelaySeconds: 45
-            periodSeconds: 3
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

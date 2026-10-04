@@ -3,3 +3,11 @@
 .terraform
 *.tfstate*
 *.log
+# Terraform plan files
+*.tfplan
+*.tfplan.json
+
+# Terraform local state and working directory
+.terraform/
+*.tfstate
+*.tfstate.*

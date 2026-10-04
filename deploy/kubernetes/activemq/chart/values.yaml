@@ -5,9 +5,9 @@
 replicaCount: 1
 
 image:
-  repository: watchn/activemq
+  repository: 945512081289.dkr.ecr.us-east-1.amazonaws.com/watchn/activemq
   pullPolicy: IfNotPresent
-  tag: "0.0.2"
+  tag: "v2"
 
 imagePullSecrets: []
 nameOverride: ""

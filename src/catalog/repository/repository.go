@@ -18,9 +18,19 @@ type Repository interface {
 }
 
 func NewRepository(config config.DatabaseConfiguration) (Repository, error) {
-	if config.Type == "mysql" {
-		return newMySQLRepository(config)
+	if config.Type == "json" {
+		return newJSONRepository()
 	}
 
 	return nil, fmt.Errorf("Unknown database type: %s", config.Type)
+}
+
+func contains(values []string, target string) bool {
+	for _, value := range values {
+		if value == target {
+			return true
+		}
+	}
+
+	return false
 }

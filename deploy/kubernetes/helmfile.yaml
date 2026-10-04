@@ -30,7 +30,7 @@ releases:
   values:
     - components.yaml.gotmpl
     - messaging:
-        activemq: 
+        activemq:
           brokerUrl: "tcp://activemq-0.activemq:61616"
 
 - name: "checkout"

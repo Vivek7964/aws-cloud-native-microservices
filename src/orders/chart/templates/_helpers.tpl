@@ -83,28 +83,3 @@ Create the name of the config map to use
 {{- toYaml .Values.metrics.podAnnotations }}
 {{- end }}
 {{- end -}}
-
-{{- define "orders.mysql.fullname" -}}
-{{- include "orders.fullname" . }}-mysql
-{{- end -}}
-
-{{/*
-Common labels for mysql
-*/}}
-{{- define "orders.mysql.labels" -}}
-helm.sh/chart: {{ include "orders.chart" . }}
-{{ include "orders.mysql.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels for mysql
-*/}}
-{{- define "orders.mysql.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "orders.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/component: mysql
-{{- end }}

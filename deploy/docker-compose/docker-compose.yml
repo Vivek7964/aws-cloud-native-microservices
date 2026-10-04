@@ -1,17 +1,15 @@
-version: '2'
-
 services:
   ui:
     ports:
-    - 80:8080
+      - "80:8080"
     environment:
-      - JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/urandom
-      - SERVER_TOMCAT_ACCESSLOG_ENABLED=true
-      - ENDPOINTS_CATALOG=http://catalog:8080
-      - ENDPOINTS_CARTS=http://carts:8080
-      - ENDPOINTS_ORDERS=http://orders:8080
-      - ENDPOINTS_CHECKOUT=http://checkout:8080
-      - ENDPOINTS_ASSETS=http://assets:8080
+    - JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/urandom
+    - SERVER_TOMCAT_ACCESSLOG_ENABLED=true
+    - ENDPOINTS_CATALOG=http://catalog:8080
+    - ENDPOINTS_CARTS=http://carts:8080
+    - ENDPOINTS_ORDERS=http://orders:8080
+    - ENDPOINTS_CHECKOUT=http://checkout:8080
+    - ENDPOINTS_ASSETS=http://assets:8080
     hostname: ui
     build:
       context: ../../src/ui
@@ -33,18 +31,6 @@ services:
     cap_drop:
       - ALL
 
-  catalog-db:
-    image: mysql:5.7
-    hostname: catalog-db
-    restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=my-secret-pw
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
-      - MYSQL_DATABASE=watchndb
-      - MYSQL_USER=catalog_user
-      - MYSQL_PASSWORD=default_password
-    mem_limit: 128m
-
   carts:
     hostname: carts
     build:
@@ -56,21 +42,10 @@ services:
     environment:
       - JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/urandom
       - SERVER_TOMCAT_ACCESSLOG_ENABLED=true
-      - SPRING_PROFILES_ACTIVE=dynamodb
-      - CARTS_DYNAMODB_ENDPOINT=http://carts-db:8000
-      - CARTS_DYNAMODB_CREATETABLE=true
-      - AWS_ACCESS_KEY_ID=key
-      - AWS_SECRET_ACCESS_KEY=secret
     mem_limit: 256m
     cap_drop:
       - ALL
 
-  carts-db:
-    image: amazon/dynamodb-local:1.13.1
-    hostname: carts-db
-    restart: always
-    mem_limit: 128m
-    
   orders:
     hostname: orders
     build:
@@ -82,29 +57,13 @@ services:
     environment:
       - JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/urandom
       - SERVER_TOMCAT_ACCESSLOG_ENABLED=true
-      - SPRING_PROFILES_ACTIVE=mysql,activemq
-      - SPRING_DATASOURCE_WRITER_URL=jdbc:mysql://orders-db:3306/orders
-      - SPRING_DATASOURCE_WRITER_USERNAME=orders_user
-      - SPRING_DATASOURCE_WRITER_PASSWORD=default_password
-      - SPRING_DATASOURCE_READER_URL=jdbc:mysql://orders-db:3306/orders
-      - SPRING_DATASOURCE_READER_USERNAME=orders_user
-      - SPRING_DATASOURCE_READER_PASSWORD=default_password
+      - SPRING_PROFILES_ACTIVE=activemq
       - SPRING_ACTIVEMQ_BROKERURL=tcp://activemq:61616
     mem_limit: 256m
     cap_drop:
       - ALL
-
-  orders-db:
-    image: mysql:5.7
-    hostname: orders-db
-    restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=my-secret-pw
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
-      - MYSQL_DATABASE=orders
-      - MYSQL_USER=orders_user
-      - MYSQL_PASSWORD=default_password
-    mem_limit: 128m
+    depends_on:
+      - activemq
 
   checkout:
     build:
@@ -116,17 +75,12 @@ services:
     tmpfs:
       - /tmp:rw,noexec,nosuid
     environment:
-      - REDIS_URL=redis://checkout-redis:6379
       - ENDPOINTS_ORDERS=http://orders:8080
     mem_limit: 256m
     cap_drop:
       - ALL
-
-  checkout-redis:
-    image: redis:6.0-alpine
-    hostname: checkout-redis
-    restart: always
-    mem_limit: 128m
+    depends_on:
+      - orders
 
   assets:
     hostname: assets

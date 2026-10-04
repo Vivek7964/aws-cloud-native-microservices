@@ -12,9 +12,9 @@ type Repository interface {
 }
 
 func NewRepository(config config.DatabaseConfiguration) (Repository, error) {
-	if config.Type == "mysql" {
-		return newMySQLRepository(config)
+	if config.Type == "inmemory" {
+		return newInMemoryRepository(), nil
 	}
 
-	return nil, fmt.Errorf("Unknown database type: %s", config.Type)
+	return nil, fmt.Errorf("Unknown repository type: %s", config.Type)
 }

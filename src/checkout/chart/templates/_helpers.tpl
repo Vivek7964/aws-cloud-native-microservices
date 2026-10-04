@@ -83,28 +83,3 @@ Create the name of the config map to use
 {{- toYaml .Values.metrics.podAnnotations }}
 {{- end }}
 {{- end -}}
-
-{{- define "checkout.redis.fullname" -}}
-{{- include "checkout.fullname" . }}-redis
-{{- end -}}
-
-{{/*
-Common labels for redis
-*/}}
-{{- define "checkout.redis.labels" -}}
-helm.sh/chart: {{ include "checkout.chart" . }}
-{{ include "checkout.redis.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels for redis
-*/}}
-{{- define "checkout.redis.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "checkout.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/component: redis
-{{- end }}

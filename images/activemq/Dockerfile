@@ -1,12 +1,16 @@
+FROM eclipse-temurin:11-jre
 
-FROM openjdk:8-jre-alpine
+ENV ACTIVEMQ_VERSION="5.19.11"
+ENV ACTIVEMQ_HOME="/opt/activemq"
 
-ENV ACTIVEMQ_DATA="/data"
+RUN mkdir -p ${ACTIVEMQ_HOME} \
+    && wget -O /tmp/activemq.tar.gz \
+       https://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/apache-activemq-${ACTIVEMQ_VERSION}-bin.tar.gz \
+    && tar -xzf /tmp/activemq.tar.gz --strip-components=1 -C ${ACTIVEMQ_HOME} \
+    && rm /tmp/activemq.tar.gz
 
-RUN mkdir /$ACTIVEMQ_DATA
+COPY images/activemq/activemq.xml ${ACTIVEMQ_HOME}/conf/activemq.xml
 
-RUN wget -O activemq.tar.gz http://archive.apache.org/dist/activemq/5.16.0/apache-activemq-5.16.0-bin.tar.gz \
-  && tar -xzf activemq.tar.gz \
-  && rm activemq.tar.gz
+WORKDIR ${ACTIVEMQ_HOME}
 
-CMD ["apache-activemq-5.16.0/bin/activemq", "console"]
+CMD ["./bin/activemq", "console"]

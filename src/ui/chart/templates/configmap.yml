@@ -8,4 +8,5 @@ data:
   ENDPOINTS_CARTS: {{ .Values.endpoints.carts }}
   ENDPOINTS_ORDERS: {{ .Values.endpoints.orders }}
   ENDPOINTS_ASSETS: {{ .Values.endpoints.assets }}
+  ENDPOINTS_CHECKOUT: {{ .Values.endpoints.checkout }}
 {{- end }}

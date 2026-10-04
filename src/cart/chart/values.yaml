@@ -5,9 +5,9 @@
 replicaCount: 1
 
 image:
-  repository: watchn/watchn-cart
+  repository: 945512081289.dkr.ecr.us-east-1.amazonaws.com/watchn/carts
   pullPolicy: IfNotPresent
-  tag: "build.1661651841"
+  tag: "v1"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -69,26 +69,6 @@ configMap:
   create: true
   name:
 
-persistence: dynamodb
 
-dynamodb:
-  tableName: Items
-  createTable: false
-  create: true
-
-  image:
-    repository: amazon/dynamodb-local
-    pullPolicy: IfNotPresent
-    tag: "1.13.1"
-
-  service:
-    type: ClusterIP
-    port: 8000
-
-  podAnnotations: {}
-
-  nodeSelector: {}
-
-  tolerations: []
-
-  affinity: {}
+# Carts uses in-memory storage.
+# Cart data is intentionally ephemeral and is lost when the pod restarts.

@@ -42,12 +42,13 @@ func NewController(config config.AppConfiguration) (*Controller, error) {
 func (c *Controller) GetPaymentIntentByCartID(ctx *gin.Context) {
 	id := ctx.Param("id")
 
-	products, err := c.api.GetPaymentIntent(id)
+	paymentIntent, err := c.api.GetPaymentIntent(id)
 	if err != nil {
 		httputil.NewError(ctx, http.StatusNotFound, err)
 		return
 	}
-	ctx.JSON(http.StatusOK, products)
+
+	ctx.JSON(http.StatusOK, paymentIntent)
 }
 
 func getQueryInt(name string, defaultValue int, ctx *gin.Context) (int, error) {

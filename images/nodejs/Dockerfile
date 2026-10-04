@@ -1,5 +1,5 @@
 # Package Stage
-FROM node:12-alpine
+FROM node:20-alpine
 
 RUN apk update && \
     apk add --no-cache curl python3 alpine-sdk
@@ -9,7 +9,7 @@ WORKDIR /app
 # Only copy the package.json file to work directory
 COPY package.json .
 # Install all Packages
-RUN npm install
+RUN npm install --legacy-peer-deps
 # Copy all other source code to work directory
 ADD . /app
 # TypeScript

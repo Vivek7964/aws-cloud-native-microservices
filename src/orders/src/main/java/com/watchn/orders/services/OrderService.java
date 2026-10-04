@@ -1,17 +1,15 @@
 package com.watchn.orders.services;
 
-import com.google.common.collect.Lists;
 import com.watchn.orders.entities.OrderEntity;
 import com.watchn.orders.entities.OrderItemEntity;
 import com.watchn.orders.messaging.OrdersEventHandler;
-import com.watchn.orders.repositories.OrderReadRepository;
 import com.watchn.orders.repositories.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -21,18 +19,20 @@ public class OrderService {
     private OrderRepository repository;
 
     @Autowired
-    private OrderReadRepository readRepository;
-
-    @Autowired
     private OrdersEventHandler eventHandler;
 
-    @Transactional
     public OrderEntity create(OrderEntity order) {
-        for(OrderItemEntity item : order.getItems()) {
+
+        if (order.getId() == null || order.getId().isEmpty()) {
+            order.setId(UUID.randomUUID().toString());
+        }
+
+        for (OrderItemEntity item : order.getItems()) {
             item.setOrder(order);
 
             OrderItemEntity.Key key = new OrderItemEntity.Key();
-            //key.setProductId(item.getProductId());
+            key.setOrderId(order.getId());
+            key.setProductId(item.getProductId());
 
             item.setId(key);
         }
@@ -45,6 +45,6 @@ public class OrderService {
     }
 
     public List<OrderEntity> list() {
-        return Lists.newArrayList(this.readRepository.findAll());
+        return repository.findAll();
     }
 }

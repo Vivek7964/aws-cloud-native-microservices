@@ -5,9 +5,9 @@
 replicaCount: 1
 
 image:
-  repository: watchn/watchn-orders
+  repository: 945512081289.dkr.ecr.us-east-1.amazonaws.com/watchn/orders
   pullPolicy: IfNotPresent
-  tag: "build.1661651841"
+  tag: "v1"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -68,34 +68,6 @@ metrics:
 configMap:
   create: true
   name:
-
-mysql:
-  create: true
-
-  writer:
-    secret:
-      name: orders-writer-db
-
-  reader:
-    secret:
-      name: orders-reader-db
-
-  image:
-    repository: mysql
-    pullPolicy: IfNotPresent
-    tag: "5.7"
-
-  service:
-    type: ClusterIP
-    port: 3306
-
-  podAnnotations: {}
-
-  nodeSelector: {}
-
-  tolerations: []
-
-  affinity: {}
 
 messaging:
   provider: activemq

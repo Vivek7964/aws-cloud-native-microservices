@@ -1,4 +1,5 @@
 {{/* vim: set filetype=mustache: */}}
+
 {{/*
 Expand the name of the chart.
 */}}
@@ -83,28 +84,3 @@ Create the name of the config map to use
 {{- toYaml .Values.metrics.podAnnotations }}
 {{- end }}
 {{- end -}}
-
-{{- define "carts.dynamodb.fullname" -}}
-{{- include "carts.fullname" . }}-dynamodb
-{{- end -}}
-
-{{/*
-Common labels for dynamodb
-*/}}
-{{- define "carts.dynamodb.labels" -}}
-helm.sh/chart: {{ include "carts.chart" . }}
-{{ include "carts.dynamodb.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels for dynamodb
-*/}}
-{{- define "carts.dynamodb.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "carts.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/component: dynamodb
-{{- end }}

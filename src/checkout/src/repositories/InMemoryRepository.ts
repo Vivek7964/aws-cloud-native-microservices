@@ -1,27 +1,19 @@
-import { runInThisContext } from 'vm';
 import { IRepository } from './IRepository';
 
 export class InMemoryRepository implements IRepository {
 
-  map = new Map<string, string>(); 
+  private map = new Map<string, string>();
 
-  async get(key : string) : Promise<string> {
-    if(this.map.has(key)) {
-      return Promise.resolve(this.map.get(key));
-    }
-
-    return null;
+  async get(key: string): Promise<string> {
+    return this.map.get(key) ?? null;
   }
 
-  async set(key : string, value : string) : Promise<string> {
+  async set(key: string, value: string): Promise<string> {
     this.map.set(key, value);
-
-    return Promise.resolve(value);
+    return value;
   }
 
-  async remove(key : string) : Promise<void> {
+  async remove(key: string): Promise<void> {
     this.map.delete(key);
-
-    return Promise.resolve(null);
   }
 }

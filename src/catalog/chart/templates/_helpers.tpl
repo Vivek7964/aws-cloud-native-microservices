@@ -84,27 +84,3 @@ Create the name of the config map to use
 {{- end }}
 {{- end -}}
 
-{{- define "catalog.mysql.fullname" -}}
-{{- include "catalog.fullname" . }}-mysql
-{{- end -}}
-
-{{/*
-Common labels for mysql
-*/}}
-{{- define "catalog.mysql.labels" -}}
-helm.sh/chart: {{ include "catalog.chart" . }}
-{{ include "catalog.mysql.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels for mysql
-*/}}
-{{- define "catalog.mysql.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "catalog.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/component: mysql
-{{- end }}

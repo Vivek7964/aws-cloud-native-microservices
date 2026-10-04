@@ -2,9 +2,6 @@ package com.watchn.carts.services;
 
 import com.watchn.carts.repositories.CartEntity;
 import com.watchn.carts.repositories.ItemEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import java.util.*;
 
 public class InMemoryCartService implements CartService {
@@ -90,7 +87,6 @@ public class InMemoryCartService implements CartService {
     }
 }
 
-@Data
 class Cart implements CartEntity {
 
     private String customerId;
@@ -100,10 +96,24 @@ class Cart implements CartEntity {
     public Cart(String customerId) {
         this.customerId = customerId;
     }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public List<CartItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<CartItem> items) {
+        this.items = items;
+    }
 }
 
-@Data
-@AllArgsConstructor
 class CartItem implements ItemEntity {
 
     private String itemId;
@@ -111,4 +121,34 @@ class CartItem implements ItemEntity {
     private int quantity;
 
     private int unitPrice;
+
+    public CartItem(String itemId, int quantity, int unitPrice) {
+        this.itemId = itemId;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(int unitPrice) {
+        this.unitPrice = unitPrice;
+    }
 }

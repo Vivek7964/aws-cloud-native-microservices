@@ -5,9 +5,9 @@
 replicaCount: 1
 
 image:
-  repository: watchn/watchn-assets
+  repository: 945512081289.dkr.ecr.us-east-1.amazonaws.com/watchn/assets
   pullPolicy: IfNotPresent
-  tag: "build.1661651841"
+  tag: "v1"
 
 imagePullSecrets: []
 nameOverride: ""

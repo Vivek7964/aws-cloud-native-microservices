@@ -1,5 +1,5 @@
 # Build Stage
-FROM alpine:3.12 as build-env
+FROM alpine:3.12 As build-env
 
 ARG MAIN_PATH
 
@@ -49,6 +49,6 @@ WORKDIR /app
 USER appuser
 
 COPY --chown=appuser:appuser --from=build-env /src/main /app/
-COPY --chown=appuser:appuser db/ /app/db/
+COPY --chown=appuser:appuser products.json /app/
 
 ENTRYPOINT ["/app/main"]

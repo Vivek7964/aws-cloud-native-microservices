@@ -5,9 +5,9 @@
 replicaCount: 1
 
 image:
-  repository: watchn/watchn-ui
+  repository: 945512081289.dkr.ecr.us-east-1.amazonaws.com/watchn/ui
   pullPolicy: IfNotPresent
-  tag: "build.1661651841"
+  tag: "v1"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -38,7 +38,7 @@ securityContext:
   runAsUser: 1000
 
 service:
-  type: ClusterIP
+  type: NodePort
   port: 80
 
 resources:
@@ -76,6 +76,7 @@ endpoints:
   carts: http://carts:80
   orders: http://orders:80
   assets: http://assets:80
+  checkout: http://checkout:80
 
 ## Ingress for load balancer
 ingress:

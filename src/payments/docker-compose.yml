@@ -9,24 +9,12 @@ services:
         MAIN_PATH: main.go
     image: microservices-demo/payments
     hostname: payments
-    depends_on:
-    - payments-db
     restart: always
     cap_drop:
       - all
     read_only: true
     environment:
       - reschedule=on-node-failure
+      - DB_TYPE=inmemory
     ports:
       - "8081:8080"
-  payments-db:
-    image: mysql:5.7
-    hostname: payments-db
-    restart: always
-    environment:
-      - reschedule=on-node-failure
-      - MYSQL_ROOT_PASSWORD=my-secret-pw
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
-      - MYSQL_DATABASE=watchndb
-      - MYSQL_USER=payments_user
-      - MYSQL_PASSWORD=default_password

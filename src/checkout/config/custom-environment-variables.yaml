@@ -1,9 +1,4 @@
 port: "PORT"
 
-redis:
-  url: "REDIS_URL"
-  reader:
-    url: "REDIS_READER_URL"
-
 endpoints:
   orders: "ENDPOINTS_ORDERS"

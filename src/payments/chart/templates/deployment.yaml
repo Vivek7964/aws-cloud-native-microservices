@@ -34,31 +34,8 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           env:
-            - name: DB_ENDPOINT
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.writer.secret.name }}
-                  key: endpoint
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.writer.secret.name }}
-                  key: username
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.writer.secret.name }}
-                  key: password
-            - name: DB_READ_ENDPOINT
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.reader.secret.name }}
-                  key: endpoint
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.writer.secret.name }}
-                  key: name
+            - name: DB_TYPE
+              value: inmemory
           envFrom:
             - configMapRef:
                 name: {{ include "payments.configMapName" . }}
