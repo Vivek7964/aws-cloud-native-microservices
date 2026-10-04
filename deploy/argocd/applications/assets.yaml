@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: watchn-assets
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Vivek7964/microservice-demo.git
+    targetRevision: master
+    path: src/assets/chart
+    helm:
+      releaseName: assets
+      parameters:
+        - name: image.tag
+          value: v1
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: watchn
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
