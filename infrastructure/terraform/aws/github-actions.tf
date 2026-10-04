@@ -31,10 +31,7 @@ resource "aws_iam_role" "github_actions_ecr" {
         Condition = {
           StringEquals = {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
-          }
-
-          StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:Vivek7964/microservice-demo:ref:refs/heads/master"
+            "token.actions.githubusercontent.com:sub" = "repo:Vivek7964@123818080/microservice-demo@140416223:ref:refs/heads/master"
           }
         }
       }
