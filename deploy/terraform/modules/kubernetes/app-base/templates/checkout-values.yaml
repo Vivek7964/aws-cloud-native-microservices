@@ -1,3 +1,0 @@
-redis:
-  create: ${redis_create}
-  address: ${redis_address}

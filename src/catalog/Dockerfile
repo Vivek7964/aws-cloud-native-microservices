@@ -1,51 +1,40 @@
 # Build Stage
-FROM alpine:3.12 As build-env
+FROM golang:1.25-alpine AS build-env
 
 ARG MAIN_PATH
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh make musl-dev go
+RUN apk add --no-cache bash git openssh make
 
-# Configure Go
-ENV GOROOT /usr/lib/go
-ENV GOPATH /go
-ENV PATH /go/bin:$PATH
-
-RUN mkdir -p ${GOPATH}/src ${GOPATH}/bin
-
-# App
-RUN mkdir /src
 WORKDIR /src
 
-COPY go.mod .
-COPY go.sum .
+COPY go.mod go.sum ./
 
 RUN go mod download
 
 COPY . .
 
-RUN go build -o main $MAIN_PATH
+RUN go build -o /src/main ${MAIN_PATH}
 
-# Final stage
-FROM alpine:3.12
+# Final Stage
+FROM alpine:3.22
 
 ENV APPUSER=appuser
 ENV APPUID=1000
 ENV APPGID=1000
 
-RUN addgroup --gid $APPGID "$APPUSER" \
+RUN addgroup --gid ${APPGID} "${APPUSER}" \
     && adduser \
     --disabled-password \
     --gecos "" \
     --home "/app" \
-    --ingroup "$APPUSER" \
-    --uid "$APPUID" \
-    "$APPUSER"
+    --ingroup "${APPUSER}" \
+    --uid "${APPUID}" \
+    "${APPUSER}"
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache curl
+RUN apk add --no-cache curl
 
 WORKDIR /app
+
 USER appuser
 
 COPY --chown=appuser:appuser --from=build-env /src/main /app/

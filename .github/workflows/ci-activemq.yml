@@ -1,0 +1,64 @@
+name: ActiveMQ CI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'images/activemq/**'
+      - '.github/workflows/ci-activemq.yml'
+
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'images/activemq/**'
+      - '.github/workflows/ci-activemq.yml'
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: watchn/activemq
+
+jobs:
+  activemq:
+    name: ActiveMQ CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6.3.0
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build ActiveMQ image
+        run: |
+          docker build \
+            -f images/activemq/Dockerfile \
+            -t ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} \
+            .
+
+      - name: Scan ActiveMQ image with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: '${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}'
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+      - name: Push ActiveMQ image to ECR
+        run: |
+          docker push \
+            ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}

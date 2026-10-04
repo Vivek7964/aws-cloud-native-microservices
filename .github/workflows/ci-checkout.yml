@@ -1,0 +1,81 @@
+name: Checkout CI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/checkout/**'
+      - 'images/nodejs/**'
+      - '.github/workflows/ci-checkout.yml'
+
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'src/checkout/**'
+      - 'images/nodejs/**'
+      - '.github/workflows/ci-checkout.yml'
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: watchn/checkout
+
+jobs:
+  checkout:
+    name: Checkout CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: src/checkout/package-lock.json
+
+      - name: Install dependencies
+        working-directory: src/checkout
+        run: npm install --legacy-peer-deps
+
+      - name: Run Checkout tests
+        working-directory: src/checkout
+        run: npm test
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6.3.0
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Checkout image
+        run: |
+          docker build \
+            -f images/nodejs/Dockerfile \
+            -t ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} \
+            src/checkout
+
+      - name: Scan Checkout image with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: '${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}'
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+      - name: Push Checkout image to ECR
+        run: |
+          docker push \
+            ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}

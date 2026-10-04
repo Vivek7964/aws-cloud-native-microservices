@@ -1,0 +1,82 @@
+name: Carts CI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/cart/**'
+      - 'images/java17/**'
+      - '.github/workflows/ci-carts.yml'
+
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'src/cart/**'
+      - 'images/java17/**'
+      - '.github/workflows/ci-carts.yml'
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: watchn/carts
+
+jobs:
+  carts:
+    name: Carts CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Run Carts tests
+        working-directory: src/cart
+        run: ./mvnw test
+
+      - name: Build Carts JAR
+        working-directory: src/cart
+        run: ./mvnw package -DskipTests
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6.3.0
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Carts image
+        run: |
+          docker build \
+            -f images/java17/Dockerfile \
+            --build-arg JAR_PATH=target/carts-0.0.1-SNAPSHOT.jar \
+            -t ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} \
+            src/cart
+
+      - name: Scan Carts image with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: '${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}'
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+      - name: Push Carts image to ECR
+        run: |
+          docker push \
+            ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
