@@ -1,0 +1,34 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: watchn
+  namespace: logging
+
+spec:
+  version: 9.2.0
+
+  nodeSets:
+    - name: default
+      count: 1
+
+      config:
+        node.roles:
+          - master
+          - data
+          - ingest
+
+      podTemplate:
+        spec:
+          containers:
+            - name: elasticsearch
+              resources:
+                requests:
+                  cpu: 250m
+                  memory: 1Gi
+                limits:
+                  cpu: 1000m
+                  memory: 1Gi
+
+          volumes:
+            - name: elasticsearch-data
+              emptyDir: {}
