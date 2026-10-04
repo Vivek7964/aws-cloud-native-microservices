@@ -31,7 +31,9 @@ The platform uses:
 
 Watch the complete project demonstration:
 
-**[Add project demonstration video here]**
+
+https://github.com/user-attachments/assets/fd82c8d4-b018-44ae-860f-a21a0f0000dc
+
 
 ---
 
