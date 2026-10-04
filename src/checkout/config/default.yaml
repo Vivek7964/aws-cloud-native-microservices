@@ -1,0 +1,7 @@
+port: 8080
+
+endpoints:
+  orders: ''
+
+# none/debug/info
+loglevel: info

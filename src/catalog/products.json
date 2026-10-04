@@ -1,0 +1,76 @@
+{
+  "products": [
+    {
+      "id": "6d62d909-f957-430e-8689-b5129c0bb75e",
+      "name": "Pocket Watch",
+      "description": "Properly dapper.",
+      "price": 385,
+      "count": 33,
+      "imageUrl": "/assets/pocket_watch.jpg",
+      "tags": ["dress"]
+    },
+    {
+      "id": "a0a4f044-b040-410d-8ead-4de0446aec7e",
+      "name": "Wood Watch",
+      "description": "Looks like a tree",
+      "price": 50,
+      "count": 115,
+      "imageUrl": "/assets/wood_watch.jpg",
+      "tags": ["casual"]
+    },
+    {
+      "id": "808a2de1-1aaa-4c25-a9b9-6612e8f29a38",
+      "name": "Chronograf Classic",
+      "description": "Spend that IPO money",
+      "price": 5100,
+      "count": 9,
+      "imageUrl": "/assets/chrono_classic.jpg",
+      "tags": ["dress", "luxury"]
+    },
+    {
+      "id": "510a0d7e-8e83-4193-b483-e27e09ddc34d",
+      "name": "Gentleman",
+      "description": "Touch of class for a bargain.",
+      "price": 795,
+      "count": 51,
+      "imageUrl": "/assets/gentleman.jpg",
+      "tags": ["dress"]
+    },
+    {
+      "id": "ee3715be-b4ba-11ea-b3de-0242ac130004",
+      "name": "Smart 3.0",
+      "description": "Can tell you what you want for breakfast",
+      "price": 650,
+      "count": 9,
+      "imageUrl": "/assets/smart_1.jpg",
+      "tags": ["smart", "dress"]
+    },
+    {
+      "id": "f4ebd070-b4ba-11ea-b3de-0242ac130004",
+      "name": "FitnessX",
+      "description": "Touch of class for a bargain.",
+      "price": 180,
+      "count": 76,
+      "imageUrl": "/assets/smart_2.jpg",
+      "tags": ["smart", "dress"]
+    }
+  ],
+  "tags": [
+    {
+      "name": "smart",
+      "displayName": "Smart"
+    },
+    {
+      "name": "dress",
+      "displayName": "Dress"
+    },
+    {
+      "name": "luxury",
+      "displayName": "Luxury"
+    },
+    {
+      "name": "casual",
+      "displayName": "Casual"
+    }
+  ]
+}

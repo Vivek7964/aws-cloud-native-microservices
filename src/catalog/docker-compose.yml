@@ -1,0 +1,18 @@
+services:
+  catalog:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MAIN_PATH: main.go
+    image: microservices-demo/catalog
+    hostname: catalog
+    restart: always
+    cap_drop:
+      - all
+    read_only: true
+    environment:
+      - reschedule=on-node-failure
+      - DB_TYPE=json
+    ports:
+      - "8081:8080"

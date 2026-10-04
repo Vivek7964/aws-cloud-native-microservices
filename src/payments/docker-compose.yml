@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  payments:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MAIN_PATH: main.go
+    image: microservices-demo/payments
+    hostname: payments
+    restart: always
+    cap_drop:
+      - all
+    read_only: true
+    environment:
+      - reschedule=on-node-failure
+      - DB_TYPE=inmemory
+    ports:
+      - "8081:8080"
