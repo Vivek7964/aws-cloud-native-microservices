@@ -1,8 +1,8 @@
 # 🚀 Watchn – Cloud-Native Microservices Platform
 
-Watchn is a cloud-native microservices application modernized and deployed on Kubernetes and Amazon EKS. The application has been simplified by replacing unnecessary database dependencies with JSON-based and in-memory storage while retaining the core microservices architecture and ActiveMQ-based asynchronous communication. The platform integrates Docker, Terraform, Helm, Helmfile, Argo CD, Prometheus, Grafana, Fluent Bit, Elasticsearch, Kibana, and AWS services to demonstrate a complete cloud-native deployment workflow. The project focuses on practical Cloud and DevOps engineering, covering infrastructure, containerization, GitOps, monitoring, centralized logging, autoscaling, and Kubernetes operations.
+Watchn is a cloud-native microservices application modernized and deployed on Kubernetes and Amazon EKS. The application has been simplified by replacing unnecessary database dependencies with JSON-based and in-memory storage while retaining the core microservices architecture and ActiveMQ-based asynchronous communication. The platform integrates Docker, Terraform, Helm, Helmfile, Argo CD, Prometheus, Grafana, Fluent Bit, Elasticsearch, Kibana, and AWS services to demonstrate a complete cloud-native deployment workflow. 
 
-This project builds on the original Watchn microservices application by Niall Thomson and incorporates production-oriented Kubernetes and GitOps practices inspired by Laxmikanta Giri's work. 
+The project focuses on practical Cloud and DevOps engineering, covering infrastructure, containerization, GitOps, monitoring, centralized logging, autoscaling, and Kubernetes operations.
 
 ---
 
@@ -787,8 +787,17 @@ This project demonstrates hands-on experience with:
 
 ---
 
+# 👨‍💻 Acknowledgements
+
+This project builds on the original Watchn microservices application by Niall Thomson and incorporates production-oriented Kubernetes and GitOps practices inspired by Laxmikanta Giri's work. 
+
+---
+
 # 👨‍💻 Author
 
 **Vivek**
 
-Cloud & DevOps Engineering Project
+GitHub: https://github.com/Vivek7964
+
+LinkedIn: https://www.linkedin.com/in/bukkasamudram-vivekananda-reddy-244808294/
+
