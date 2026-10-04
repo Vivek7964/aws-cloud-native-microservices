@@ -1,4 +1,4 @@
-# 🚀 Watchn – Cloud-Native Microservices Platform
+# 🚀 Watchn – AWS Cloud-Native Kubernetes GitOps Microservices Platform
 
 Watchn is a cloud-native microservices application modernized and deployed on Kubernetes and Amazon EKS. The application has been simplified by replacing unnecessary database dependencies with JSON-based and in-memory storage while retaining the core microservices architecture and ActiveMQ-based asynchronous communication. The platform integrates Docker, Terraform, Helm, Helmfile, Argo CD, Prometheus, Grafana, Fluent Bit, Elasticsearch, Kibana, and AWS services to demonstrate a complete cloud-native deployment workflow. 
 
