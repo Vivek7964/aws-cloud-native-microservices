@@ -72,3 +72,5 @@ jobs:
         run: |
           docker push \
             ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+# OIDC trust test
