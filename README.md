@@ -1,6 +1,8 @@
-# Watchn – Cloud-Native Microservices Platform
+# 🚀 Watchn – Cloud-Native Microservices Platform
 
-A production-style microservices platform deployed on Kubernetes and Amazon EKS, demonstrating containerization, infrastructure as code, GitOps, autoscaling, monitoring, and centralized logging.
+Watchn is a cloud-native microservices application modernized and deployed on Kubernetes and Amazon EKS. The application has been simplified by replacing unnecessary database dependencies with JSON-based and in-memory storage while retaining the core microservices architecture and ActiveMQ-based asynchronous communication. The platform integrates Docker, Terraform, Helm, Helmfile, Argo CD, Prometheus, Grafana, Fluent Bit, Elasticsearch, Kibana, and AWS services to demonstrate a complete cloud-native deployment workflow. The project focuses on practical Cloud and DevOps engineering, covering infrastructure, containerization, GitOps, monitoring, centralized logging, autoscaling, and Kubernetes operations.
+
+This project builds on the original Watchn microservices application by Niall Thomson and incorporates production-oriented Kubernetes and GitOps practices inspired by Laxmikanta Giri's work. 
 
 ---
 
@@ -8,70 +10,79 @@ A production-style microservices platform deployed on Kubernetes and Amazon EKS,
 
 ![Watchn Architecture](docs/images/watchn-architecture.png)
 
-### Microservices Architecture
+The Watchn application is deployed as a collection of containerized microservices running on Kubernetes.
 
-![Microservices Architecture](docs/images/Microservices-architecture.png)
+The platform uses:
+
+- **Docker** for containerization
+- **Kubernetes / Amazon EKS** for orchestration
+- **Terraform** for AWS infrastructure
+- **Helm / Helmfile** for application deployment
+- **Argo CD** for GitOps
+- **Prometheus / Grafana** for monitoring
+- **Fluent Bit / Elasticsearch / Kibana** for centralized logging
+- **ActiveMQ** for asynchronous messaging
+- **AWS Application Load Balancer** for external access
 
 ---
 
-## 🎥 Project Demo
+
+# 🎥 Project Demo
 
 Watch the complete project demonstration:
 
-<temp>
+**[Add project demonstration video here]**
 
 ---
 
-## 📌 Overview
+## 🧩 Microservices Architecture
 
-This project modernizes the **Watchn microservices application** into a lightweight cloud-native platform.
+![Microservices Architecture](docs/images/Microservices-architecture.png)
 
-The application is containerized and deployed on **Amazon EKS** using **Docker, Kubernetes, Helm, Terraform, and Argo CD**. The original database-heavy architecture was simplified by replacing unnecessary persistent databases with JSON and in-memory storage while retaining the core microservice architecture.
+The application consists of the following services:
 
-The project also implements:
+| Service | Responsibility | Storage |
+|---|---|---|
+| **Catalog** | Product catalog | `products.json` |
+| **Carts** | Shopping carts | In-memory |
+| **Orders** | Order management | In-memory |
+| **Checkout** | Checkout processing | In-memory |
+| **Assets** | Static/application assets | Stateless |
+| **UI** | Frontend | Stateless |
+| **ActiveMQ** | Asynchronous messaging | Message broker |
 
-- Kubernetes-based microservices deployment
-- AWS EKS infrastructure
-- Terraform Infrastructure as Code
-- Helm and Helmfile
-- Argo CD GitOps
-- Horizontal Pod Autoscaling
-- AWS Pod Identity
-- Prometheus and Grafana monitoring
-- Fluent Bit, Elasticsearch and Kibana centralized logging
-- ActiveMQ asynchronous messaging
-- AWS Application Load Balancer
+The architecture keeps the original microservice structure while simplifying unnecessary database dependencies.
 
 ---
 
-## 💾 Storage Architecture
+# 💾 Simplified Storage Architecture
 
-The application was simplified to remove unnecessary database infrastructure.
+The original Watchn application depended on database infrastructure that was unnecessary for this project.
+
+The storage layer was simplified to make the application lightweight and easier to deploy.
 
 ```text
-Catalog
-   │
-   └── products.json
+                         Watchn
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+          ▼                ▼                ▼
+       Catalog           Carts            Orders
+          │                │                │
+          ▼                ▼                ▼
+   products.json       In-Memory        In-Memory
 
-Carts
-   │
-   └── In-Memory
 
-Orders
-   │
-   └── In-Memory
+                      Checkout
+                         │
+                         ▼
+                     In-Memory
 
-Checkout
-   │
-   └── In-Memory
 
-Assets
-   │
-   └── Stateless
-
-ActiveMQ
-   │
-   └── Asynchronous Messaging
+                       Assets
+                         │
+                         ▼
+                      Stateless
 ```
 
 ### Catalog
@@ -82,19 +93,23 @@ Product information is stored in:
 src/catalog/products.json
 ```
 
-The Catalog service reads product information from the JSON file instead of MySQL.
+The Catalog service reads product information directly from the JSON file instead of using MySQL.
 
 ### Carts
 
-Carts use an in-memory data structure.
+Cart information is maintained using an in-memory data structure.
 
 ### Orders
 
-Orders use an in-memory repository.
+Orders are maintained using an in-memory repository.
 
 ### Checkout
 
-Checkout uses an in-memory repository instead of Redis.
+Checkout processing uses an in-memory repository instead of Redis.
+
+### Assets
+
+The Assets service remains stateless.
 
 ### ActiveMQ
 
@@ -102,65 +117,558 @@ ActiveMQ is retained as the messaging layer for asynchronous communication betwe
 
 ---
 
-## 🛠️ Technology Stack
+# 🐳 Running Locally
 
-### Application
-
-- Java
-- Go
-- Node.js
-- Nginx
-- ActiveMQ
-
-### Containerization
+## Prerequisites
 
 - Docker
 - Docker Compose
+- Git
 
-### Cloud
+### Clone the repository
 
-- AWS
-- Amazon EKS
-- Amazon VPC
-- Application Load Balancer
-- S3
-- IAM
-- AWS Pod Identity
+```bash
+git clone https://github.com/Vivek7964/microservice-demo.git
+cd microservice-demo
+```
 
-### Kubernetes
+### Start the application
 
-- Kubernetes
-- Helm
-- Helmfile
-- Gateway API
-- Horizontal Pod Autoscaler
+```bash
+cd deploy/docker-compose
+docker compose up -d
+```
 
-### Infrastructure
+### Check containers
 
-- Terraform
+```bash
+docker compose ps
+```
 
-### GitOps
+### View logs
 
-- Argo CD
-- Argo CD Image Updater
-- GitHub
+```bash
+docker compose logs -f
+```
 
-### Monitoring
+### Stop the application
 
-- Prometheus
-- Grafana
-- Alertmanager
-
-### Logging
-
-- Fluent Bit
-- Elasticsearch
-- Kibana
-- ECK
+```bash
+docker compose down
+```
 
 ---
 
-## 📁 Project Structure
+# ☸️ Kubernetes Deployment
+
+The application can be deployed to Kubernetes using **Helm and Helmfile**.
+
+### Check Kubernetes context
+
+```bash
+kubectl config current-context
+```
+
+### Create the namespace
+
+```bash
+kubectl create namespace watchn
+```
+
+### Deploy the application
+
+```bash
+helmfile -e dev sync
+```
+
+### Verify the deployment
+
+```bash
+kubectl get pods -n watchn
+```
+
+Expected workloads:
+
+```text
+activemq
+assets
+carts
+catalog
+checkout
+orders
+ui
+```
+
+---
+
+## 🖥️ Kubernetes Deployment
+
+![Kubernetes Pods](docs/images/kubernetes-pods.png)
+
+The screenshot above shows the Watchn microservices running as Kubernetes workloads.
+
+Useful commands:
+
+```bash
+kubectl get pods -n watchn
+kubectl get svc -n watchn
+kubectl get deployments -n watchn
+kubectl get hpa -n watchn
+```
+
+---
+
+# 🌐 Application Access
+
+The application is exposed through an **AWS Application Load Balancer**.
+
+```text
+                    Internet
+                       │
+                       ▼
+          Application Load Balancer
+                       │
+                       ▼
+              Kubernetes Gateway
+                       │
+                       ▼
+                   UI Service
+                       │
+        ┌──────────────┼──────────────┐
+        │              │              │
+        ▼              ▼              ▼
+     Catalog         Carts         Checkout
+                                      │
+                                      ▼
+                                    Orders
+                                      │
+                                      ▼
+                                    Assets
+```
+
+The UI is externally accessible while the backend services remain internal to the Kubernetes cluster.
+
+---
+
+## 🖥️ Watchn Application
+
+![Watchn Application](docs/images/watchn-application.png)
+
+The Watchn frontend provides the user-facing interface for interacting with the microservices platform.
+
+---
+
+# 🏗️ AWS Infrastructure
+
+AWS infrastructure is provisioned using **Terraform**.
+
+```text
+                       Terraform
+                           │
+                           ▼
+                       AWS VPC
+                           │
+             ┌─────────────┴─────────────┐
+             │                           │
+             ▼                           ▼
+       Public Subnets              Private Subnets
+             │                           │
+       ┌─────┼─────┐                     ▼
+       │     │     │                 Amazon EKS
+       ▼     ▼     ▼                     │
+      IGW   ALB   NAT                    ▼
+                                   EKS Node Group
+```
+
+Terraform manages the core infrastructure required to run the application.
+
+### AWS components
+
+- Amazon VPC
+- Public and private subnets
+- Internet Gateway
+- NAT Gateway
+- Application Load Balancer
+- Amazon EKS
+- EKS Node Group
+- IAM
+- AWS Pod Identity
+- Amazon S3
+
+---
+
+# 🔄 GitOps with Argo CD
+
+Argo CD is used to implement GitOps-based Kubernetes deployment.
+
+```text
+Developer
+    │
+    ▼
+ GitHub Repository
+    │
+    ▼
+  Argo CD
+    │
+    ▼
+ Amazon EKS
+    │
+    ▼
+Watchn Application
+```
+
+Argo CD continuously reconciles the Kubernetes cluster with the desired state stored in Git.
+
+---
+
+## 🔵 Argo CD Dashboard
+
+![Argo CD Dashboard](docs/images/argocd-dashboard.png)
+
+The Argo CD dashboard provides visibility into application synchronization, health, Kubernetes resources, and deployment status.
+
+---
+
+# 📦 CI/CD Architecture
+
+The CI/CD workflow separates **container image creation** from **Kubernetes deployment**.
+
+```text
+Developer
+    │
+    ▼
+  GitHub
+    │
+    ▼
+GitHub Actions
+    │
+    ├── Build
+    ├── Test
+    ├── Trivy Scan
+    └── Push Image
+            │
+            ▼
+        Amazon ECR
+            │
+            ▼
+  Argo CD Image Updater
+            │
+            ▼
+     Git Manifests
+            │
+            ▼
+         Argo CD
+            │
+            ▼
+         Amazon EKS
+```
+
+### Deployment flow
+
+```text
+Code
+ │
+ ▼
+GitHub
+ │
+ ▼
+CI Pipeline
+ │
+ ├── Build
+ ├── Test
+ └── Security Scan
+ │
+ ▼
+Amazon ECR
+ │
+ ▼
+Image Updater
+ │
+ ▼
+Git
+ │
+ ▼
+Argo CD
+ │
+ ▼
+EKS
+```
+
+---
+
+# 📈 Monitoring
+
+Prometheus collects application and Kubernetes metrics.
+
+```text
+Watchn Pods
+     │
+     │ /metrics
+     ▼
+ Prometheus
+     │
+     ▼
+  Grafana
+```
+
+Monitoring includes:
+
+- CPU utilization
+- Memory utilization
+- Pod restarts
+- Running pod count
+- Application availability
+- Kubernetes node metrics
+- Kubernetes workload metrics
+
+---
+
+## 📊 Grafana Dashboard
+
+![Grafana Dashboard](docs/images/grafana-dashboard.png)
+
+Grafana provides dashboards for monitoring the health and performance of the Watchn application and Kubernetes workloads.
+
+---
+
+# 🔥 Alerting
+
+Alertmanager handles alerts generated by Prometheus.
+
+```text
+Prometheus
+    │
+    ▼
+Alertmanager
+    │
+    ▼
+  Slack
+```
+
+Alerts can be configured for conditions such as:
+
+- High CPU utilization
+- High memory utilization
+- Pod failures
+- Application availability
+- Kubernetes resource problems
+
+---
+
+# 📜 Centralized Logging
+
+Application logs are collected using **Fluent Bit** and stored in **Elasticsearch**.
+
+```text
+Watchn Pods
+     │
+     ▼
+ Fluent Bit
+     │
+     ▼
+Elasticsearch
+     │
+     ▼
+  Kibana
+```
+
+### Logging components
+
+| Component | Purpose |
+|---|---|
+| **Fluent Bit** | Collects container logs |
+| **Elasticsearch** | Stores and indexes logs |
+| **Kibana** | Log visualization and search |
+| **ECK** | Manages Elastic resources on Kubernetes |
+
+---
+
+## 🟡 Kibana Logs
+
+![Kibana Logs](docs/images/kibana-logs.png)
+
+Kibana provides a centralized interface for searching and analyzing logs generated by the Watchn microservices.
+
+This makes it easier to investigate:
+
+- Application errors
+- HTTP requests
+- Container logs
+- Service failures
+- Runtime behavior
+
+---
+
+# 📊 Complete Observability Architecture
+
+The platform combines **metrics, logging, and alerting** into a single observability stack.
+
+```text
+                         Watchn Pods
+                        /           \
+                       /             \
+                  Metrics             Logs
+                     │                 │
+                     ▼                 ▼
+                Prometheus         Fluent Bit
+                     │                 │
+                     ▼                 ▼
+                  Grafana         Elasticsearch
+                                       │
+                                       ▼
+                                     Kibana
+
+                 Prometheus
+                      │
+                      ▼
+                 Alertmanager
+                      │
+                      ▼
+                    Slack
+```
+
+### Observability stack
+
+| Area | Technology |
+|---|---|
+| Metrics | Prometheus |
+| Dashboards | Grafana |
+| Alerting | Alertmanager |
+| Log Collection | Fluent Bit |
+| Log Storage | Elasticsearch |
+| Log Visualization | Kibana |
+| Elastic Management | ECK |
+
+---
+
+# ⚡ Horizontal Pod Autoscaling
+
+HPA automatically adjusts application replicas according to resource utilization.
+
+```text
+             Resource Metrics
+                    │
+                    ▼
+                   HPA
+               ┌────┴────┐
+               │         │
+               ▼         ▼
+           Scale Up   Scale Down
+               │         │
+               └────┬────┘
+                    ▼
+             Application Pods
+```
+
+Check HPA status:
+
+```bash
+kubectl get hpa -n watchn
+```
+
+This allows Kubernetes workloads to dynamically scale according to demand.
+
+---
+
+# 🔐 AWS Pod Identity
+
+AWS Pod Identity allows Kubernetes workloads to access AWS services without storing long-lived AWS credentials inside containers.
+
+```text
+Kubernetes Pod
+      │
+      ▼
+Pod Identity Agent
+      │
+      ▼
+AWS IAM Role
+      │
+      ▼
+AWS Permissions
+```
+
+This provides a secure mechanism for workloads that require AWS permissions.
+
+---
+
+# 📨 ActiveMQ
+
+ActiveMQ provides asynchronous messaging between application components.
+
+```text
+Catalog
+   │
+   ▼
+ActiveMQ
+   ▲
+   │
+Orders
+   ▲
+   │
+Carts
+   ▲
+   │
+Checkout
+```
+
+The message broker allows services to communicate asynchronously and reduces direct coupling between components.
+
+---
+
+# 🔍 Kubernetes Commands
+
+### Pods
+
+```bash
+kubectl get pods -n watchn
+```
+
+### Services
+
+```bash
+kubectl get svc -n watchn
+```
+
+### Deployments
+
+```bash
+kubectl get deployments -n watchn
+```
+
+### HPA
+
+```bash
+kubectl get hpa -n watchn
+```
+
+### Nodes
+
+```bash
+kubectl get nodes
+```
+
+---
+
+# 🛠️ Technology Stack
+
+| Category | Technologies |
+|---|---|
+| **Application** | Java, Go, Node.js, Nginx |
+| **Messaging** | ActiveMQ |
+| **Containers** | Docker, Docker Compose |
+| **Cloud** | AWS, EKS, VPC, S3, IAM |
+| **Kubernetes** | Kubernetes, Helm, Helmfile, Gateway API |
+| **Infrastructure** | Terraform |
+| **GitOps** | Argo CD, Argo CD Image Updater |
+| **CI/CD** | GitHub Actions, Amazon ECR |
+| **Monitoring** | Prometheus, Grafana |
+| **Alerting** | Alertmanager |
+| **Logging** | Fluent Bit, Elasticsearch, Kibana |
+| **Elastic Management** | ECK |
+
+---
+
+# 📁 Repository Structure
 
 ```text
 microservice-demo/
@@ -209,437 +717,40 @@ microservice-demo/
 
 ---
 
-## 🐳 Run Locally with Docker Compose
+# 🎯 Key Learning Outcomes
 
-### Prerequisites
+This project demonstrates hands-on experience with:
 
-- Docker
-- Docker Compose
-- Git
+### ☁️ Cloud & Infrastructure
 
-### Clone the Repository
-
-```bash
-git clone https://github.com/Vivek7964/microservice-demo.git
-cd microservice-demo
-```
-
-### Start the Application
-
-```bash
-cd deploy/docker-compose
-docker compose up -d
-```
-
-### Check the Containers
-
-```bash
-docker compose ps
-```
-
-### View Logs
-
-```bash
-docker compose logs -f
-```
-
-### Stop the Application
-
-```bash
-docker compose down
-```
-
----
-
-## ☸️ Kubernetes Deployment
-
-The application can be deployed to Kubernetes using Helm/Helmfile.
-
-### Check the Kubernetes Context
-
-```bash
-kubectl config current-context
-```
-
-### Create the Watchn Namespace
-
-```bash
-kubectl create namespace watchn
-```
-
-### Deploy Using Helmfile
-
-```bash
-helmfile -e dev sync
-```
-
-### Check the Pods
-
-```bash
-kubectl get pods -n watchn
-```
-
-Expected services:
-
-```text
-activemq
-assets
-carts
-catalog
-checkout
-orders
-ui
-```
-
----
-
-## 🌐 Application Access
-
-The application is exposed through an AWS Application Load Balancer.
-
-```text
-User
-  │
-  ▼
-Application Load Balancer
-  │
-  ▼
-Kubernetes Gateway
-  │
-  ▼
-UI Service
-  │
-  ├── Catalog
-  ├── Carts
-  ├── Checkout
-  ├── Orders
-  └── Assets
-```
-
-The backend microservices remain internal to the Kubernetes cluster.
-
----
-
-## 🏗️ Infrastructure with Terraform
-
-AWS infrastructure is provisioned using Terraform.
-
-```text
-Terraform
-    │
-    ▼
-AWS VPC
-    │
-    ├── Public Subnets
-    │   ├── Internet Gateway
-    │   ├── NAT Gateway
-    │   ├── Application Load Balancer
-    │   └── Bastion Host
-    │
-    └── Private Subnets
-        │
-        └── Amazon EKS
-            │
-            └── Node Group
-```
-
-Terraform provisions the core infrastructure required to run the application on EKS.
-
----
-
-## 🔄 GitOps with Argo CD
-
-Argo CD is used to implement GitOps-based Kubernetes deployment.
-
-```text
-Git Repository
-      │
-      ▼
-   Argo CD
-      │
-      ▼
-     EKS
-      │
-      ▼
-Watchn Application
-```
-
-Argo CD continuously reconciles the Kubernetes cluster with the desired state stored in Git.
-
----
-
-## 📦 CI/CD Architecture
-
-The project architecture supports a CI/CD workflow:
-
-```text
-Developer
-    │
-    ▼
-  GitHub
-    │
-    ▼
-GitHub Actions
-    │
-    ├── Checkout
-    ├── Build
-    ├── Test
-    ├── Trivy Scan
-    └── Push Image
-            │
-            ▼
-        Amazon ECR
-            │
-            ▼
-   Argo CD Image Updater
-            │
-            ▼
-      Git Manifests
-            │
-            ▼
-         Argo CD
-            │
-            ▼
-           EKS
-```
-
-The CI/CD architecture separates image creation from Kubernetes deployment.
-
----
-
-## 📈 Monitoring
-
-Prometheus collects application and Kubernetes metrics.
-
-```text
-Watchn Pods
-     │
-     │ /metrics
-     ▼
- Prometheus
-     │
-     ▼
-  Grafana
-```
-
-Grafana provides dashboards for application and Kubernetes observability.
-
-Monitoring includes:
-
-- Pod CPU usage
-- Pod memory usage
-- Pod restarts
-- Running pod count
-- Application availability
-- Kubernetes node metrics
-
----
-
-## 🔥 Alerting
-
-Alertmanager handles alerts generated from the monitoring stack.
-
-```text
-Prometheus
-    │
-    ▼
-Alertmanager
-    │
-    ▼
-  Slack
-```
-
-Slack can be used for operational notifications.
-
----
-
-## 📜 Centralized Logging
-
-Application logs are collected and centralized using the Elastic Stack.
-
-```text
-Watchn Pods
-     │
-     ▼
- Fluent Bit
-     │
-     ▼
-Elasticsearch
-     │
-     ▼
-  Kibana
-```
-
-The logging stack consists of:
-
-- **Fluent Bit** — log collection
-- **Elasticsearch** — log storage and indexing
-- **Kibana** — log visualization
-- **ECK** — Kubernetes operator for Elasticsearch and Kibana
-
----
-
-## 📊 Observability
-
-The complete observability architecture is:
-
-```text
-                 Watchn Pods
-                /           \
-               /             \
-          Metrics             Logs
-             │                 │
-             ▼                 ▼
-        Prometheus         Fluent Bit
-             │                 │
-             ▼                 ▼
-          Grafana        Elasticsearch
-                               │
-                               ▼
-                             Kibana
-
-        Prometheus
-             │
-             ▼
-        Alertmanager
-             │
-             ▼
-           Slack
-```
-
----
-
-## ⚡ Horizontal Pod Autoscaling
-
-HPA automatically adjusts application replicas based on resource utilization.
-
-```text
-              Metrics
-                 │
-                 ▼
-                HPA
-             ┌───┴───┐
-             ▼       ▼
-         Scale Up  Scale Down
-             │       │
-             └───┬───┘
-                 ▼
-          Application Pods
-```
-
-This allows Kubernetes workloads to scale according to demand.
-
----
-
-## 🔐 AWS Pod Identity
-
-AWS Pod Identity provides AWS permissions to Kubernetes workloads without storing AWS access keys inside containers.
-
-```text
-Kubernetes Pod
-      │
-      ▼
-Pod Identity Agent
-      │
-      ▼
-AWS IAM Permissions
-```
-
-This provides a secure mechanism for Kubernetes workloads that need access to AWS resources.
-
----
-
-## 📨 ActiveMQ
-
-ActiveMQ provides asynchronous messaging between application components.
-
-```text
-Catalog
-   │
-   ▼
-ActiveMQ
-   ▲
-   │
-Orders
-   ▲
-   │
-Carts
-   ▲
-   │
-Checkout
-```
-
-The message broker allows services to communicate asynchronously without requiring direct database dependencies.
-
----
-
-## 🔍 Kubernetes Observability
-
-Kubernetes resources can be inspected using:
-
-```bash
-kubectl get pods -n watchn
-```
-
-```bash
-kubectl get svc -n watchn
-```
-
-```bash
-kubectl get deployments -n watchn
-```
-
-```bash
-kubectl get hpa -n watchn
-```
-
----
-
-## 📸 Screenshots
-
-### Application
-
-![Watchn Application](docs/images/watchn-application.png)
-
-### Argo CD
-
-![Argo CD](docs/images/argocd-dashboard.png)
-
-### Grafana
-
-![Grafana](docs/images/grafana-dashboard.png)
-
-### Kibana
-
-![Kibana](docs/images/kibana-logs.png)
-
-### Kubernetes
-
-![Kubernetes](docs/images/kubernetes-pods.png)
-
----
-
-## 🎯 Key Learning Outcomes
-
-This project demonstrates practical experience with:
-
-- Microservices architecture
-- Docker
-- Docker Compose
-- Kubernetes
+- AWS
 - Amazon EKS
-- AWS VPC
+- Amazon VPC
+- IAM
+- AWS Pod Identity
+- Application Load Balancer
 - Terraform
+
+### ☸️ Kubernetes
+
+- Kubernetes
+- Docker
 - Helm
 - Helmfile
-- Kubernetes Gateway API
-- Application Load Balancer
-- ActiveMQ
-- GitOps
+- Gateway API
+- Horizontal Pod Autoscaler
+
+### 🔄 DevOps & GitOps
+
+- GitHub
+- GitHub Actions
+- Amazon ECR
 - Argo CD
 - Argo CD Image Updater
-- Horizontal Pod Autoscaler
-- AWS Pod Identity
+- GitOps
+
+### 📊 Observability
+
 - Prometheus
 - Grafana
 - Alertmanager
@@ -648,15 +759,20 @@ This project demonstrates practical experience with:
 - Kibana
 - ECK
 - Centralized logging
-- Kubernetes monitoring
+
+### 🧩 Application Architecture
+
+- Microservices
+- Stateless services
+- In-memory repositories
+- JSON-based storage
+- Asynchronous messaging
+- Kubernetes service discovery
 
 ---
 
-## 🔮 Future Enhancements
+# 🔮 Future Enhancements
 
-Possible future improvements include:
-
-- Automated CI/CD pipelines
 - OpenTelemetry distributed tracing
 - Service mesh
 - Progressive delivery
@@ -664,10 +780,12 @@ Possible future improvements include:
 - Advanced autoscaling
 - Automated security scanning
 - Cost optimization
+- Disaster recovery
+- Improved CI/CD automation
 
 ---
 
-## 👨‍💻 Author
+# 👨‍💻 Author
 
 **Vivek**
 
